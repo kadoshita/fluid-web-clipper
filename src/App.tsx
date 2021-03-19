@@ -63,7 +63,7 @@ function App() {
       url,
       description,
       image,
-      tag: tag?.replaceAll(/(,|\s)/g, '\n')
+      tag: tag?.replaceAll(',', '\n')
     };
     return pageInfo;
   };
