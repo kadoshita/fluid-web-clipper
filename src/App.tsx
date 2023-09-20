@@ -108,6 +108,28 @@ function App() {
     );
   }, []);
 
+  useEffect(() => {
+    if (url === '') return;
+
+    chrome.storage.sync.get(
+      {
+        apiEndpointUrl: 'https://fluid.example.com',
+        apiToken: '',
+      },
+      (items) => {
+        const loadCategories = async () => {
+          const _url = new URL(url);
+          const domain = _url.host;
+          const res = await fetch(`${items.apiEndpointUrl}/api/category?domain=${domain}`);
+          const resJson = await res.json();
+          setCategories(resJson);
+        };
+
+        loadCategories();
+      }
+    );
+  }, [url]);
+
   return (
     <Container fluid>
       <Col md={12}>
