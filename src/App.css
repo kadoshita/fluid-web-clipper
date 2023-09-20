@@ -1,8 +1,13 @@
-html, body {
+html,
+body {
   min-width: 320px;
 }
 
 body {
   padding-top: 4px;
   padding-bottom: 4px;
+}
+
+form>div {
+  margin-bottom: 8px;
 }
