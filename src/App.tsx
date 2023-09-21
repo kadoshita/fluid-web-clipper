@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Col, Container, Form, Row, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -12,8 +12,16 @@ type PageInfo = {
   tag?: string;
 };
 
+type SubmitData = {
+  title: string;
+  url: string;
+  category: string;
+  description: string;
+  tag: string;
+};
+
 function App() {
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, setValue } = useForm<SubmitData>();
   const [apiEndpointUrl, setApiEndpointUrl] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [title, setTitle] = useState('');
@@ -23,7 +31,7 @@ function App() {
   const [tag, setTag] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<SubmitData> = (data) => {
     const submitData = {
       title: data.title,
       url: data.url,
@@ -129,6 +137,14 @@ function App() {
       }
     );
   }, [url]);
+
+  useEffect(() => {
+    setValue('title', title);
+    setValue('url', url);
+    setValue('description', description);
+    setValue('tag', tag);
+    setValue('category', categories[0]);
+  }, [title, url, description, tag, categories]);
 
   return (
     <Container fluid>
