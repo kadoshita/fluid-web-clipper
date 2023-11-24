@@ -17,6 +17,7 @@ type SubmitData = {
   url: string;
   category: string;
   description: string;
+  comment: string;
   tag: string;
 };
 
@@ -27,6 +28,7 @@ function App() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [comment, setComment] = useState('');
   const [image, setImage] = useState('');
   const [tag, setTag] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -37,6 +39,7 @@ function App() {
       url: data.url,
       category: data.category,
       description: data.description,
+      comment: data.comment,
       image: image,
       tag: data.tag.split('\n'),
     };
@@ -142,6 +145,7 @@ function App() {
     setValue('title', title);
     setValue('url', url);
     setValue('description', description);
+    setValue('comment', comment);
     setValue('tag', tag);
     setValue('category', categories[0]);
   }, [title, url, description, tag, categories]);
@@ -167,6 +171,9 @@ function App() {
             </Form.Group>
             <Form.Group>
               <Form.Control as='textarea' rows={6} size='sm' placeholder='Description' defaultValue={description} {...register('description')} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Control as='textarea' rows={4} size='sm' placeholder='Comment' defaultValue='' {...register('comment')} maxLength={140} />
             </Form.Group>
             <Form.Group>{image !== '' ? <Image src={image} thumbnail></Image> : <></>}</Form.Group>
             <Form.Group>
