@@ -58,4 +58,24 @@ test.describe('popup', () => {
       tag: ['tag1', 'tag2'],
     });
   });
+
+  test('auto-fills the form by scraping the active tab', async ({ context, openPopupForActiveTab }) => {
+    const targetUrl = 'http://clip-target.test/article';
+
+    await context.route(targetUrl, (route) =>
+      route.fulfill({
+        contentType: 'text/html',
+        body: '<html><head><title>Scraped Title</title><meta property="og:description" content="Scraped description"></head><body>hi</body></html>',
+      })
+    );
+    await context.route(`${API_ENDPOINT_URL}/api/category*`, (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
+    );
+
+    const { popup } = await openPopupForActiveTab(targetUrl);
+
+    await expect(popup.getByPlaceholder('Title')).toHaveValue('Scraped Title');
+    await expect(popup.getByPlaceholder('URL')).toHaveValue(targetUrl);
+    await expect(popup.getByPlaceholder('Description')).toHaveValue('Scraped description');
+  });
 });
