@@ -28,7 +28,7 @@ function App() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
-  const [comment, setComment] = useState('');
+  const [comment] = useState('');
   const [image, setImage] = useState('');
   const [tag, setTag] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -148,7 +148,7 @@ function App() {
     setValue('comment', comment);
     setValue('tag', tag);
     setValue('category', categories[0]);
-  }, [title, url, description, tag, categories]);
+  }, [title, url, description, comment, tag, categories, setValue]);
 
   return (
     <Container fluid>
