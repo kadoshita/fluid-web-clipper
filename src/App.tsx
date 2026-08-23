@@ -21,6 +21,34 @@ type SubmitData = {
   tag: string;
 };
 
+export function getTitle(): PageInfo {
+  const title = document.title;
+  const url = document.location.href;
+  const meta = Array.from(document.getElementsByTagName('meta'));
+  const description =
+    meta.find((m) => m.getAttribute('property') === 'og:description')?.getAttribute('content') ||
+    meta.find((m) => m.getAttribute('name') === 'description')?.getAttribute('content') ||
+    '';
+  const image =
+    meta.find((m) => m.getAttribute('property') === 'og:image')?.getAttribute('content') || meta.find((m) => m.getAttribute('name') === 'image')?.getAttribute('content') || '';
+  const tag =
+    meta.find((m) => m.getAttribute('property') === 'og:keywords')?.getAttribute('content') ||
+    meta.find((m) => m.getAttribute('name') === 'keywords')?.getAttribute('content') ||
+    meta
+      .filter((m) => m.getAttribute('property') === 'article:tag')
+      .map((t) => t.getAttribute('content'))
+      .join(',') ||
+    '';
+  const pageInfo: PageInfo = {
+    title,
+    url,
+    description,
+    image,
+    tag: tag?.replaceAll(',', '\n'),
+  };
+  return pageInfo;
+}
+
 function App() {
   const { handleSubmit, register, setValue } = useForm<SubmitData>();
   const [apiEndpointUrl, setApiEndpointUrl] = useState('');
@@ -28,7 +56,7 @@ function App() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
-  const [comment, setComment] = useState('');
+  const [comment] = useState('');
   const [image, setImage] = useState('');
   const [tag, setTag] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -56,34 +84,6 @@ function App() {
         window.close();
       }
     });
-  };
-
-  const getTitle = () => {
-    const title = document.title;
-    const url = document.location.href;
-    const meta = Array.from(document.getElementsByTagName('meta'));
-    const description =
-      meta.find((m) => m.getAttribute('property') === 'og:description')?.getAttribute('content') ||
-      meta.find((m) => m.getAttribute('name') === 'description')?.getAttribute('content') ||
-      '';
-    const image =
-      meta.find((m) => m.getAttribute('property') === 'og:image')?.getAttribute('content') || meta.find((m) => m.getAttribute('name') === 'image')?.getAttribute('content') || '';
-    const tag =
-      meta.find((m) => m.getAttribute('property') === 'og:keywords')?.getAttribute('content') ||
-      meta.find((m) => m.getAttribute('name') === 'keywords')?.getAttribute('content') ||
-      meta
-        .filter((m) => m.getAttribute('property') === 'article:tag')
-        .map((t) => t.getAttribute('content'))
-        .join(',') ||
-      '';
-    const pageInfo: PageInfo = {
-      title,
-      url,
-      description,
-      image,
-      tag: tag?.replaceAll(',', '\n'),
-    };
-    return pageInfo;
   };
 
   useEffect(() => {
@@ -148,7 +148,7 @@ function App() {
     setValue('comment', comment);
     setValue('tag', tag);
     setValue('category', categories[0]);
-  }, [title, url, description, tag, categories]);
+  }, [title, url, description, comment, tag, categories, setValue]);
 
   return (
     <Container fluid>
