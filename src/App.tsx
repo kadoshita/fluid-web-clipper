@@ -26,6 +26,7 @@ type StorageConfig = {
   apiToken: string;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- also used as an injected chrome.scripting.executeScript function, not just a component helper
 export function getTitle(): PageInfo {
   const title = document.title;
   const url = document.location.href;
