@@ -21,6 +21,12 @@ type SubmitData = {
   tag: string;
 };
 
+type StorageConfig = {
+  apiEndpointUrl: string;
+  apiToken: string;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components -- also used as an injected chrome.scripting.executeScript function, not just a component helper
 export function getTitle(): PageInfo {
   const title = document.title;
   const url = document.location.href;
@@ -87,7 +93,7 @@ function App() {
   };
 
   useEffect(() => {
-    chrome.storage.sync.get(
+    chrome.storage.sync.get<StorageConfig>(
       {
         apiEndpointUrl: 'https://fluid.example.com',
         apiToken: '',
@@ -104,7 +110,8 @@ function App() {
               func: getTitle,
             },
             ([res]) => {
-              const result: PageInfo = res.result;
+              const result = res.result;
+              if (!result) return;
               setTitle(result.title);
               setUrl(result.url);
               setDescription(result.description || '');
@@ -122,7 +129,7 @@ function App() {
   useEffect(() => {
     if (url === '') return;
 
-    chrome.storage.sync.get(
+    chrome.storage.sync.get<StorageConfig>(
       {
         apiEndpointUrl: 'https://fluid.example.com',
         apiToken: '',

@@ -3,10 +3,10 @@ import App from './App';
 
 describe('App', () => {
   beforeEach(() => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => [],
-    }) as jest.Mock;
+    }) as unknown as typeof fetch;
   });
 
   it('renders the clip form', async () => {
